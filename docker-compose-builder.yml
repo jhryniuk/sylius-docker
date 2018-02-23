@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  php:
+    build:
+      context: ""
+      dockerfile: docker/builder/php/Dockerfile
+      args:
+        - USERID
+    image: "${PROJECT_NAME}-php-builder:latest"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - mysql
+    environment:
+      - PROJECT_NAME
+      - MYSQL_PASSWORD
+      - USERID
+
+  mysql:
+    build:
+      context: ""
+      dockerfile: docker/builder/mysql/Dockerfile
+      args:
+        - USERID
+    image: "${PROJECT_NAME}-mysql-builder:latest"
+    volumes:
+      - ./docker/data:/var/lib/mysql
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}"
+      - USERID
+
+  node:
+    build:
+      context: ""
+      dockerfile: docker/builder/node/Dockerfile
+      args:
+        - USERID
+    image: "${PROJECT_NAME}-node-builder:latest"
+    volumes:
+      - ./:/var/www

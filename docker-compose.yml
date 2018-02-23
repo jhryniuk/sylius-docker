@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  php:
+    container_name: "${PROJECT_NAME}-php-runner"
+    build:
+      context: ""
+      dockerfile: ./docker/runner/php/Dockerfile
+      args:
+        - USERID
+    image: "${PROJECT_NAME}-php-runner:latest"
+    volumes:
+      - ./sylius:/var/www
+    links:
+      - mysql
+
+  mysql:
+    container_name: "${PROJECT_NAME}-mysql-runner"
+    build:
+      context: ""
+      dockerfile: ./docker/runner/mysql/Dockerfile
+      args:
+        - USERID
+    image: "${PROJECT_NAME}-mysql-runner:latest"
+    environment:
+       - "MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}"
+    volumes:
+      - ./docker/data:/var/lib/mysql
+
+  nginx:
+    container_name: "${PROJECT_NAME}-nginx-runner"
+    build:
+      context: ""
+      dockerfile: ./docker/runner/nginx/Dockerfile
+    image: "${PROJECT_NAME}-nginx-runner:latest"
+    depends_on:
+      - php
+    links:
+      - php
+    volumes:
+      - ./sylius:/var/www
+    ports:
+      - "8080:80"
+    environment:
+      - INDEX_FILE
+      - INDEX_DEV_FILE
+      - PROJECT_NAME
+      - ROOT_DIR
