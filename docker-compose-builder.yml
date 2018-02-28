@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   php:
@@ -15,7 +15,6 @@ services:
     environment:
       - PROJECT_NAME
       - MYSQL_PASSWORD
-      - USERID
 
   mysql:
     build:
@@ -28,7 +27,6 @@ services:
       - ./docker/data:/var/lib/mysql
     environment:
       - "MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}"
-      - USERID
 
   node:
     build:
