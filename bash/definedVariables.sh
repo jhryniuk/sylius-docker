@@ -8,4 +8,5 @@ function definedVariables
     export INDEX_DEV_FILE='app_dev.php'
     export ROOT_DIR='\/var\/www\/web'
     export USERID="$(id -u)"
+    docker_runner_containers=("php" "mysql" "nginx")
 }

@@ -12,12 +12,28 @@ done
 
 definedVariables
 
+
+function elementExists
+{
+    array=${1}[@]
+    element=${2}
+
+    for i in ${!array} ; do
+        if [[ $i == $element ]] ; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
 if [ "${TASK_NAME}" == '' ]; then
     echo -e "'build-builder-images' - will build builder images"
     echo -e "'build-project' - will build project"
     echo -e "'build-runner' - will build runner images"
     echo -e "'run-runner' - will run project"
     echo -e "'kill-runner' - will kill and remove runner containers"
+    echo -e "'enter <service>' - will enter to runner container"
 fi
 
 function build_builder_images
@@ -49,6 +65,22 @@ function kill_runner
     docker-compose -f docker-compose.yml rm -f
 }
 
+function enter_to_container
+{
+    container=$1
+
+    elementExists docker_runner_containers "${container}" && found=true  || found=false
+
+    if [ ${found} != true ] ; then
+        echo -e "Wrong service"
+        echo -e "Available services:"
+        printf '%s\t' "${docker_runner_containers[@]}"
+        printf '\n'
+    else
+        docker-compose -f docker-compose.yml exec "${container}" bash
+    fi
+}
+
 case $TASK_NAME in
     'build-builder-images')
         build_builder_images
@@ -64,5 +96,8 @@ case $TASK_NAME in
         ;;
     'kill-runner')
         kill_runner
+        ;;
+    'enter')
+        enter_to_container $2
         ;;
 esac
