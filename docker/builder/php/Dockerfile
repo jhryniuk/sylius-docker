@@ -15,12 +15,12 @@ RUN apt-get -qq update --fix-missing \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev \
         libxml2-dev \
         libxslt1-dev \
         libc-client-dev \
         libkrb5-dev \
         cloc \
+        mysql-client \
         git-core
 
 RUN docker-php-ext-configure imap --with-imap-ssl --with-kerberos \

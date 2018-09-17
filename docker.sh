@@ -27,14 +27,15 @@ function elementExists
     return 1
 }
 
-if [ "${TASK_NAME}" == '' ]; then
+function helper
+{
     echo -e "'build-builder-images' - will build builder images"
     echo -e "'build-project' - will build project"
     echo -e "'build-runner' - will build runner images"
     echo -e "'run-runner' - will run project"
     echo -e "'kill-runner' - will kill and remove runner containers"
     echo -e "'enter <service>' - will enter to runner container"
-fi
+}
 
 function build_builder_images
 {
@@ -99,5 +100,8 @@ case $TASK_NAME in
         ;;
     'enter')
         enter_to_container $2
+        ;;
+    *)
+        helper
         ;;
 esac
