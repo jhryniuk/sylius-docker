@@ -1,6 +1,10 @@
 #!/bin/bash -e
 
-sleep 10;
+until mysql -u root -p${MYSQL_PASSWORD} -h mysql -P 3306; do
+    >&2 echo "Mysql is not available - sleeping."
+    sleep 1
+done
+
 composer create-project sylius/sylius-standard sylius
 
 cd sylius
@@ -19,3 +23,5 @@ php bin/console sylius:install -e test -n
 
 php bin/console sylius:install:assets
 php bin/console cache:clear --no-warmup
+
+rm -rf ../.composer
